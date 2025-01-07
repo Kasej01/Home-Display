@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GOES-East Latest GeoColor Image</title>
+    <script src="./script.js" defer></script>
+    <link rel="stylesheet" type="text/css" href="./styles.css">
+</head>
+<body>
+    <div class="grid-container">
+        <div class="world-view">
+            <p class="timestamp">Timestamp: <span id="timestamp">Loading...</span></p>
+            <img class="image" id="noaa-image"
+            src="https://cdn.star.nesdis.noaa.gov/GOES16/ABI/FD/GEOCOLOR/678x678.jpg" 
+            alt="Latest GOES-East GeoColor Image">
+        </div>
+        <div class="right-grid">
+            <div class="Weather">
+                <h2 class="weather-title">Weather</h2>
+                <div id="icons">
+                    
+                </div>
+                <h3 class="title">City: <span class="content" id="city">Loading location...</span></h3>
+                <div class="grid">
+                    <h3 class="title">Temperature: <span class="content" id="temp">Loading temperature...</span></h3>
+                    <h3 class="title">Feels Like: <span class="content" id="feels-like">Loading...</span></h3>
+                </div>
+                <div class="grid">
+                    <h3 class="title">Low: <span class="content" id="min">Loading min...</span></h3>
+                    <h3 class="title">High: <span class="content" id="max">Loading max...</span></h3>
+                </div>
+                <h4 class="title" id="desc">Loading Description...</h4>
+            </div>
+            <div class="News">
+                <h2 class="news-title">News</h2>
+
+                <h4 class="title" id="title1">Loading Story1...</h3>
+                <h4 class="source" id="source1">Loading Source1...</h3>
+
+
+                <h4 class="title" id="title2">Loading Story2...</h3>
+                <h4 class="source" id="source2">Loading Source2...</h3>
+
+
+                <h4 class="title" id="title3">Loading Story3...</h3>
+                <h4 class="source" id="source3">Loading Source3...</h3>
+            </div>
+        </div>
+    </div>
+
+    <p>Source: NOAA GOES-East</p>
+</body>
+</html>
