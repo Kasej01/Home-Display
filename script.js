@@ -1,6 +1,5 @@
-let openWeatherMapApiKey = "";
-
-let theNewsApiKey = "";
+const openWeatherMapApiKey = "<%= OWM_API_KEY %>";
+const theNewsApi = "<% TNA_API_KEY%>";
 
 function getWeatherIcons(data){
 //All icons for weather
@@ -116,44 +115,58 @@ function updatePhoto(){
 }
 
 function getWeather(){
-    //Gets the city
-    let openWeatherMapGeoApiUrl = `http://api.openweathermap.org/geo/1.0/direct?q=Cookeville&limit=5&appid=${openWeatherMapApiKey}`;
-    fetch(openWeatherMapGeoApiUrl)
-    .then(response => {
-        if(response.ok){
-            return response.json();
+    //Gets the city from json and uses it to get the lon and lat coords of the city for returning weather information
+    fetch("./config.json")
+    .then((result) => {
+        if (!result.ok){
+            throw new Error (`HTTP Error! ${result.status}`);
         }
-        else{
-            throw new Error('Response not returned from openweathermap geolocation');
-        }})
-        .then(geoData => {
-            let cityGeo = geoData[0];
-            let cityName = cityGeo.name;
-            let cityState = cityGeo.state;
-            const weatherApiURL = `https://api.openweathermap.org/data/3.0/onecall?lat=` + cityGeo.lat + `&lon=` + cityGeo.lon + `&units=Imperial&appid=${openWeatherMapApiKey}`
-            fetch(weatherApiURL)
-            .then(response => {
-                if(response.ok){ return response.json(); }
-                else{ throw new Error('Response not returned from openweathermap'); }})
-            .then(data => {
-                let current_temp = Math.round(data.current.temp);
-                let feels_like = Math.round(data.current.feels_like);
-                let todays_min = Math.round(data.daily[0].temp.min);
-                let todays_max = Math.round(data.daily[0].temp.max);
-                let todays_desc = data.daily[0].summary;
+        return result.json();
+    })
+    .then((jsonData) => {
+        let city = jsonData.city;
+        let state = jsonData.state;
+        let country = jsonData.country;
+
+        let openWeatherMapGeoApiUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${city},${state},${country}&limit=5&appid=${openWeatherMapApiKey}`;
         
-                document.getElementById("city").textContent = cityName + ", " + cityState;
-                document.getElementById("temp").textContent = current_temp + String.fromCharCode(176);
-                document.getElementById("feels-like").textContent = feels_like + String.fromCharCode(176);
-                document.getElementById("min").textContent = todays_min + String.fromCharCode(176);
-                document.getElementById("max").textContent = todays_max + String.fromCharCode(176);
-                document.getElementById("desc").textContent = todays_desc;
-                console.log(data);
-                getWeatherIcons(data);
+        fetch(openWeatherMapGeoApiUrl)
+        .then(response => {
+            if(response.ok){
+                return response.json();
+            }
+            else{
+                throw new Error('Response not returned from openweathermap geolocation');
+            }})
+            .then(geoData => {
+                let cityGeo = geoData[0];
+                let cityName = cityGeo.name;
+                let cityState = cityGeo.state;
+                const weatherApiURL = `https://api.openweathermap.org/data/3.0/onecall?lat=` + cityGeo.lat + `&lon=` + cityGeo.lon + `&units=Imperial&appid=${openWeatherMapApiKey}`
+                fetch(weatherApiURL)
+                .then(response => {
+                    if(response.ok){ return response.json(); }
+                    else{ throw new Error('Response not returned from openweathermap'); }})
+                .then(data => {
+                    let current_temp = Math.round(data.current.temp);
+                    let feels_like = Math.round(data.current.feels_like);
+                    let todays_min = Math.round(data.daily[0].temp.min);
+                    let todays_max = Math.round(data.daily[0].temp.max);
+                    let todays_desc = data.daily[0].summary;
+            
+                    document.getElementById("city").textContent = cityName + ", " + cityState;
+                    document.getElementById("temp").textContent = current_temp + String.fromCharCode(176);
+                    document.getElementById("feels-like").textContent = feels_like + String.fromCharCode(176);
+                    document.getElementById("min").textContent = todays_min + String.fromCharCode(176);
+                    document.getElementById("max").textContent = todays_max + String.fromCharCode(176);
+                    document.getElementById("desc").textContent = todays_desc;
+                    console.log(data);
+                    getWeatherIcons(data);
+                })
+                .catch(error => console.error('Error: ', error));
             })
-            .catch(error => console.error('Error: ', error));
-        })
-    .catch(error => console.error('Error: ', error));
+        .catch(error => console.error('Error: ', error));
+    })
 }
 
 function getNews(){
