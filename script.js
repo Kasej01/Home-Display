@@ -1,5 +1,5 @@
 const openWeatherMapApiKey = "<%= OWM_API_KEY %>";
-const theNewsApi = "<% TNA_API_KEY%>";
+const theNewsApiKey = "<% TNA_API_KEY%>";
 
 function getWeatherIcons(data){
 //All icons for weather
@@ -128,8 +128,8 @@ function getWeather(){
         let state = jsonData.state;
         let country = jsonData.country;
 
-        let openWeatherMapGeoApiUrl = `http://api.openweathermap.org/geo/1.0/direct?q=${city},${state},${country}&limit=5&appid=${openWeatherMapApiKey}`;
-        
+        let openWeatherMapGeoApiUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city},${state},${country}&limit=5&appid=${openWeatherMapApiKey}`;
+
         fetch(openWeatherMapGeoApiUrl)
         .then(response => {
             if(response.ok){
