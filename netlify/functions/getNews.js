@@ -1,4 +1,3 @@
-// netlify/functions/getNews.js
 const fetch = require('node-fetch');
 
 exports.handler = async () => {
@@ -7,16 +6,20 @@ exports.handler = async () => {
 
     try {
         const response = await fetch(newsApiUrl);
+
         if (!response.ok) {
-            throw new Error(`Error fetching news data: ${response.statusText}`);
+            throw new Error(`News API Error: ${response.statusText}`);
         }
+
         const data = await response.json();
+        console.log('News API Response:', data);
 
         return {
             statusCode: 200,
             body: JSON.stringify(data),
         };
     } catch (error) {
+        console.error('Error in getNews function:', error.message);
         return {
             statusCode: 500,
             body: JSON.stringify({ error: error.message }),
