@@ -1,0 +1,23 @@
+{
+  "name": "home-display",
+  "version": "1.0.0",
+  "description": "1. Display\r     - Whether you use a mini display from a raspberry pi, a TV, or an Amazon Fire Tablet (our choice), you just need something to display the page.\r 2. Computer capable of accessing the internet\r     - This can be a microcontroller like the ESP32 (with wifi), Raspberry Pi, as long as it has the capability of access to an internet browser\r 3. 3 Accounts are needed for this\r     1. A Netlify Account (this will be used for publishing the website)\r     2. A OpenWeatherMap Account (used to call their API and get weather data)\r     3. A NewsApi Account (used to call their API and get News data)\r 5. WiFi (I figured this was a given)",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kasej01/Home-Display.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kasej01/Home-Display/issues"
+  },
+  "homepage": "https://github.com/Kasej01/Home-Display#readme",
+  "dependencies": {
+    "node-fetch": "^3.3.2"
+  }
+}
