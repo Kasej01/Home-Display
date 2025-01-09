@@ -114,47 +114,37 @@ function updatePhoto(){
     console.log("Updated photo");
 }
 
-function getWeather(){
-    //Gets the city from json and uses it to get the lon and lat coords of the city for returning weather information
+function getWeather() {
+    // Read city, state, and country from the config.json file
     fetch("./config.json")
-    .then((result) => {
-        if (!result.ok){
-            throw new Error (`HTTP Error! ${result.status}`);
-        }
-        return result.json();
-    })
-    .then((jsonData) => {
-        let city = jsonData.city;
-        let state = jsonData.state;
-        let country = jsonData.country;
-
-        let openWeatherMapGeoApiUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city},${state},${country}&limit=5&appid=${openWeatherMapApiKey}`;
-
-        fetch(openWeatherMapGeoApiUrl)
-        .then(response => {
-            if(response.ok){
-                return response.json();
+        .then((result) => {
+            if (!result.ok) {
+                throw new Error(`HTTP Error! ${result.status}`);
             }
-            else{
-                throw new Error('Response not returned from openweathermap geolocation');
-            }})
-            .then(geoData => {
-                let cityGeo = geoData[0];
-                let cityName = cityGeo.name;
-                let cityState = cityGeo.state;
-                const weatherApiURL = `https://api.openweathermap.org/data/3.0/onecall?lat=` + cityGeo.lat + `&lon=` + cityGeo.lon + `&units=Imperial&appid=${openWeatherMapApiKey}`
-                fetch(weatherApiURL)
-                .then(response => {
-                    if(response.ok){ return response.json(); }
-                    else{ throw new Error('Response not returned from openweathermap'); }})
-                .then(data => {
-                    let current_temp = Math.round(data.current.temp);
-                    let feels_like = Math.round(data.current.feels_like);
-                    let todays_min = Math.round(data.daily[0].temp.min);
-                    let todays_max = Math.round(data.daily[0].temp.max);
-                    let todays_desc = data.daily[0].summary;
-            
-                    document.getElementById("city").textContent = cityName + ", " + cityState;
+            return result.json();
+        })
+        .then((jsonData) => {
+            const city = jsonData.city;
+            const state = jsonData.state;
+            const country = jsonData.country;
+
+            // Call the serverless function for weather data
+            fetch(`/.netlify/functions/getWeather?city=${city}&state=${state}&country=${country}`)
+                .then((response) => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Error fetching weather data from serverless function');
+                    }
+                })
+                .then((data) => {
+                    const current_temp = Math.round(data.current.temp);
+                    const feels_like = Math.round(data.current.feels_like);
+                    const todays_min = Math.round(data.daily[0].temp.min);
+                    const todays_max = Math.round(data.daily[0].temp.max);
+                    const todays_desc = data.daily[0].summary;
+
+                    document.getElementById("city").textContent = data.city + ", " + data.state;
                     document.getElementById("temp").textContent = current_temp + String.fromCharCode(176);
                     document.getElementById("feels-like").textContent = feels_like + String.fromCharCode(176);
                     document.getElementById("min").textContent = todays_min + String.fromCharCode(176);
@@ -163,34 +153,33 @@ function getWeather(){
                     console.log(data);
                     getWeatherIcons(data);
                 })
-                .catch(error => console.error('Error: ', error));
-            })
-        .catch(error => console.error('Error: ', error));
-    })
+                .catch((error) => console.error('Error:', error));
+        })
+        .catch((error) => console.error('Error:', error));
 }
 
-function getNews(){
-    let newsApiUrl = `https://api.thenewsapi.com/v1/news/top?api_token=${theNewsApiKey}&locale=us&limit=3`;
-
-    fetch(newsApiUrl)
-    .then(response => {
-        if(response.ok){
-            return response.json();
-        }
-        else{
-            throw new Error('Response not returned from theNewsApi');
-        }})
-        .then(newsData => {
-            let title = [];
-            let source = [];
-            
-            for(let i=0; i < 3; i++){
-                title[i] = newsData.data[i].title;
-                source[i] = newsData.data[i].source;
-                document.getElementById(`title${i+1}`).textContent = title[i];
-                document.getElementById(`source${i+1}`).textContent = source[i];
+function getNews() {
+    // Call the serverless function for news data
+    fetch('/.netlify/functions/getNews')
+        .then((response) => {
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Error fetching news data from serverless function');
             }
         })
+        .then((newsData) => {
+            let title = [];
+            let source = [];
+
+            for (let i = 0; i < 3; i++) {
+                title[i] = newsData.data[i].title;
+                source[i] = newsData.data[i].source;
+                document.getElementById(`title${i + 1}`).textContent = title[i];
+                document.getElementById(`source${i + 1}`).textContent = source[i];
+            }
+        })
+        .catch((error) => console.error('Error:', error));
 }
 
 getDateTime();
