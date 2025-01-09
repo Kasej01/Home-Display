@@ -4,7 +4,7 @@ const fetch = require('node-fetch');
 exports.handler = async (event) => {
     const { city, state, country } = event.queryStringParameters;
 
-    const apiKey = process.env.OWM_API_KEY; // Securely access the OpenWeatherMap API key
+    const apiKey = process.env.OMW_API_KEY; // Securely access the OpenWeatherMap API key
     const geoApiUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${city},${state},${country}&limit=5&appid=${apiKey}`;
 
     try {
